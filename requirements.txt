@@ -4,6 +4,13 @@ opencv-contrib-python
 # pip install opencv-contrib-python==3.4.2.17 --force-reinstall
 imutils
 imageio # open image with url
-skimage
+scikit-image
 numpy
 accimage    # high performance image loading and augmenting routines mimicking PIL.Image interface
+
+# augment for ML
+# https://www.facebook.com/VinBigdataTraining/posts/246123157524069
+Augmentor
+Albumentations
+imgaug
+Torchvision
