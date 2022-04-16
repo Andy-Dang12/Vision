@@ -1,11 +1,14 @@
+defusedxml
+cffi
 Pillow
+numpy
 opencv-contrib-python
 # if using SIFT in opencv-python
 # pip install opencv-contrib-python==3.4.2.17 --force-reinstall
 imutils
 imageio # open image with url
 scikit-image
-numpy
+
 accimage    # high performance image loading and augmenting routines mimicking PIL.Image interface
 
 # augment for ML
