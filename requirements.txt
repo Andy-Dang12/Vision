@@ -20,3 +20,13 @@ Augmentor
 Albumentations
 imgaug
 Torchvision
+
+# other library
+# https://pyimagesearch.com/2014/01/12/my-top-9-favorite-python-libraries-for-building-image-search-engines/
+SimpleCV
+mahotas
+Pgmagick
+SimpleITK
+ilastik
+pprocess
+h5py
