@@ -1,5 +1,6 @@
-import glob
-import os
+from glob import glob
+import os, re
+import os.path as osp
 import xml.etree.ElementTree as ET
 
 
@@ -20,48 +21,47 @@ def coordinateCvt2YOLO(size, box):
     return (round(x, 5), round(y, 5), round(w, 5), round(h, 5))
 
 
-def xml_to_text(xml_path, class_id_dict, text_path):
-    box = [0, 0, 0, 0]
-    size = [0, 0]
-    for xml_file in glob.glob(xml_path + '{}*.xml'.format(os.sep)):
-        tree = ET.parse(xml_file)
-        root = tree.getroot()
-
-        file_name = root.find('filename').text
-        file_name = file_name.replace(".jpg", ".txt")
-
-        if not os.path.exists(text_path):
-            os.makedirs(text_path)
-        f = open(os.path.join(text_path, file_name), "w", encoding="utf-8")
+def xml_to_text(xml_path:str, class_to_idx:dict, text_path:str):
+    if not osp.exists(text_path):
+        os.makedirs(text_path)
         
-        for member in root.findall('object'):
-            size[0] = int(root.find('size')[0].text)
-            size[1] = int(root.find('size')[1].text)
-            c = member[0].text
-            box[0] = int(member[4][0].text)  # xmin
-            box[1] = int(member[4][1].text)  # ymin
-            box[2] = int(member[4][2].text)  # xmax
-            box[3] = int(member[4][3].text)  # ymax
+    xmls = glob(osp.join(xml_path, '*.xml'))
+    for xml in xmls:
+        root = ET.parse(xml).getroot()
 
-            bb = coordinateCvt2YOLO(size, box)
-            bndbox = "".join(["".join([str(e), " "]) for e in bb])
-            contents = "".join([str(class_id_dict[c]), " ", bndbox[:-1], "\n"])
-            f.write(contents)
+        filename = root.find('filename').text
+        filename = re.sub('.jpg$', '.txt', filename)
+        width = int(root.find('size/width').text)
+        height = int(root.find('size/height').text)
+        
+        f = open(osp.join(text_path, filename), 'w', encoding='utf-8')
+        objects = root.findall('object')
+        for obj in objects:
+            class_name = obj.find('name').text
+            bndbox = obj.find('bndbox')
+            xmin = int(bndbox.find('xmin').text)
+            ymin = int(bndbox.find('ymin').text)
+            xmax = int(bndbox.find('xmax').text)
+            ymax = int(bndbox.find('ymax').text)
+
+            bb = coordinateCvt2YOLO((width, height), (xmin, ymin, xmax, ymax))
+            bndbox = ''.join([''.join([str(e), ' ']) for e in bb])
+            f.write(''.join((str(class_to_idx[class_name]), ' ', bndbox[:-1], '\n')))
+        f.close()
 
 
+xml_path = r'/home/agent/Documents/philippines/datasets/data_step3/data_tr'                      # sửa folder chứa file xml
+text_path = r'/home/agent/Documents/philippines/datasets/data_step3/datadata'                        # sửa folder chứa file txt
 
-xml_path = r"/home/scratch/Documents/philippines/datasets/data_step3/data_tr"                      # sửa folder chứa file xml
-text_path = r"/home/scratch/Documents/philippines/datasets/data_step3/datadata"                        # sửa folder chứa file txt
-
-class_id_dict = {
-    'surname': 0,
-    'givenname': 1,
+class_to_idx = {
+    'surname'   : 0,
+    'givenname' : 1,
     'middlename': 2,
-    'birth': 3,
-    'ID': 4,
-    'sex': 5,
-    'home': 6,
+    'birth'     : 3,
+    'ID'        : 4,
+    'sex'       : 5,
+    'home'      : 6,
     }
 
-xml_to_text(xml_path, class_id_dict, text_path)
-print('Successfully converted xml to csv.')
+xml_to_text(xml_path, class_to_idx, text_path)
+print('Successfully converted xml to txt.')
