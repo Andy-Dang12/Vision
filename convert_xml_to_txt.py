@@ -1,4 +1,4 @@
-from glob import glob
+from glob import iglob
 import os, re
 import os.path as osp
 import xml.etree.ElementTree as ET
@@ -25,8 +25,7 @@ def xml_to_text(xml_path:str, class_to_idx:dict, text_path:str):
     if not osp.exists(text_path):
         os.makedirs(text_path)
         
-    xmls = glob(osp.join(xml_path, '*.xml'))
-    for xml in xmls:
+    for xml in iglob(osp.join(xml_path, '*.xml')):
         root = ET.parse(xml).getroot()
 
         filename = root.find('filename').text
