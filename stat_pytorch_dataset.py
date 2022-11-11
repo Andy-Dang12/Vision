@@ -1,12 +1,14 @@
 import torch, os
 from torchvision.datasets import ImageFolder
-from torchvision.transforms import ToTensor
+from torchvision.transforms import ToTensor, Resize, Compose
 from torch.utils.data import DataLoader
 
 
 path = '/home/tz/Downloads/data/14_11'
-dataset = ImageFolder(path, transform=ToTensor())
-dataLoader = DataLoader(dataset, 64, num_workers=os.cpu_count())
+# trans = Compose([Resize([112, 112]), ToTensor()])
+trans = ToTensor()
+dataset = ImageFolder(path, transform=trans)
+dataLoader = DataLoader(dataset, 1, num_workers=os.cpu_count())
 
 
 def get_mean_and_std(dataloader:DataLoader):
