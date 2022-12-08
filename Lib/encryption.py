@@ -1,6 +1,6 @@
 from base64 import b64decode, b64encode
 from typing import overload
-from PIL import Image
+from PIL import Image, ImageFile
 from io import BytesIO
 from os.path import isfile
 
@@ -23,6 +23,6 @@ class Ecryption_Image(object):
         return converted_string
 
     @staticmethod
-    def decode(encoded_str:str) -> Image:
+    def decode(encoded_str:str) -> ImageFile.ImageFile:
         return Image.open(BytesIO(b64decode(encoded_str)))
 
