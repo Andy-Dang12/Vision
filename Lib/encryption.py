@@ -43,7 +43,7 @@ def decode_pil(encoded_str:str) -> ImageFile.ImageFile:
 
 #https://tinyurl.com/ye2xxt5k
 def encode_cv2(image:cv2.Mat) -> str:
-    retval, buffer = cv2.imencode('.png', image, [cv2.IMWRITE_PNG_COMPRESSION, 9])
+    retval, buffer = cv2.imencode('.png', image, [cv2.IMWRITE_PNG_COMPRESSION, 1])
     return b2a_base64(buffer.tobytes(), newline=False).decode('ascii', 'strict')
 
 def decode_cv2(encoded_str:Union[str, bytes]) -> cv2.Mat:
