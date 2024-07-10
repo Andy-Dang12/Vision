@@ -22,9 +22,9 @@ def coordinateCvt2YOLO(size, box):
 
 
 def xml_to_text(xml_path:str, class_to_idx:dict, text_path:str):
-    if not osp.exists(text_path):
+    if not osp.isdir(text_path):
         os.makedirs(text_path)
-        
+
     for xml in iglob(osp.join(xml_path, '*.xml')):
         root = ET.parse(xml).getroot()
 
@@ -32,7 +32,7 @@ def xml_to_text(xml_path:str, class_to_idx:dict, text_path:str):
         filename = re.sub('.jpg$', '.txt', filename)
         width = int(root.find('size/width').text)
         height = int(root.find('size/height').text)
-        
+
         f = open(osp.join(text_path, filename), 'w', encoding='utf-8')
         objects = root.findall('object')
         for obj in objects:
@@ -49,18 +49,14 @@ def xml_to_text(xml_path:str, class_to_idx:dict, text_path:str):
         f.close()
 
 
-xml_path = r'/home/agent/Documents/philippines/datasets/data_step3/data_tr'                      # sửa folder chứa file xml
-text_path = r'/home/agent/Documents/philippines/datasets/data_step3/datadata'                        # sửa folder chứa file txt
+xml_path = r'abs_path folder chứa file xml'
+text_path = r'abs_path folder chứa file txt'
 
 class_to_idx = {
-    'surname'   : 0,
-    'givenname' : 1,
-    'middlename': 2,
-    'birth'     : 3,
-    'ID'        : 4,
-    'sex'       : 5,
-    'home'      : 6,
-    }
+    'classname_0': 0,
+    'classname_1': 1,
+    'classname_2': 2,
+}
 
 xml_to_text(xml_path, class_to_idx, text_path)
 print('Successfully converted xml to txt.')
