@@ -29,7 +29,8 @@ def xml_to_text(xml_path:str, class_to_idx:dict, text_path:str):
         root = ET.parse(xml).getroot()
 
         filename = root.find('filename').text
-        filename = re.sub('.jpg$', '.txt', filename)
+        # filename = re.sub('.jpg$', '.txt', filename)
+        filename = filename.rsplit('.', maxsplit=1)[0] + '.txt'
         width = int(root.find('size/width').text)
         height = int(root.find('size/height').text)
 
